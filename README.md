@@ -1,6 +1,6 @@
 
-# MileApp VoiceNote Analyzer 
-🎙️ Analisa dari voicenote MileApp, sebuah AI mini project 🤖 
+# 🎙️ MileApp VoiceNote Analyzer 
+Analisa dari voicenote MileApp, sebuah AI mini project 🤖 
 
 Didukung oleh 🦙Llama dan 🦻Whisper
 
