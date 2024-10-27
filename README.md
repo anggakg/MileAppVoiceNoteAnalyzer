@@ -1,6 +1,6 @@
 
-# 🎙️ MileApp VoiceNote Analyzer 
-Analisa dari voicenote MileApp, sebuah AI mini project 🤖 
+# 🎙️ MileApp VoiceNote Summarizer 
+Analisa AI untuk voicenote MileApp, sebuah AI mini project 🤖 
 
 Didukung oleh 🦙Llama dan 🦻Whisper
 
@@ -14,7 +14,7 @@ Didukung oleh 🦙Llama dan 🦻Whisper
 ## Features
 
 - Auto detect voicenote (m4a) file in task data
-- Auto analyze transcription into 
+- Auto analyze transcription
 - Analisa mencakup:
 
         1. Ringkasan utama 
