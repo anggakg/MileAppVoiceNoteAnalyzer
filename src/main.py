@@ -27,6 +27,23 @@ os.environ["GROQ_API_KEY"] = GROQ_API_KEY
 # Inisialisasi Groq client
 client = Groq()
 
+def find_m4a_urls(obj):
+    """Recursively search for .m4a URLs in any field of the JSON response"""
+    urls = []
+    
+    def recursive_search(item):
+        if isinstance(item, dict):
+            for value in item.values():
+                recursive_search(value)
+        elif isinstance(item, list):
+            for element in item:
+                recursive_search(element)
+        elif isinstance(item, str) and item.lower().endswith('.m4a'):
+            urls.append(item)
+    
+    recursive_search(obj)
+    return urls
+
 def get_audio_url(task_id, token):
     """Mengambil URL audio dari MileApp API"""
     headers = {
@@ -42,15 +59,13 @@ def get_audio_url(task_id, token):
         
         data = response.json()
         
-        # Mencari URL audio dalam response
-        # Note: Sesuaikan dengan struktur JSON yang sebenarnya dari API
-        audio_urls = [attachment['url'] for attachment in data.get('attachments', [])
-                     if attachment.get('url', '').lower().endswith('.m4a')]
+        # Recursively search for all .m4a URLs in the response
+        audio_urls = find_m4a_urls(data)
         
         if not audio_urls:
             raise ValueError("Tidak ditemukan file audio (.m4a) dalam task ini")
             
-        return audio_urls[0]  # Mengambil URL audio pertama
+        return audio_urls[0]  # Return the first found audio URL
         
     except requests.exceptions.RequestException as e:
         raise Exception(f"Gagal mengambil data dari MileApp API: {str(e)}")
