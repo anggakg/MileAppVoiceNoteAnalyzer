@@ -17,13 +17,23 @@ Didukung oleh 🦙Llama dan 🦻Whisper
 - Auto analyze transcription into 
 - Analisa mencakup:
 
-            1. Ringkasan utama 
-            2. Poin-poin penting 
-            3. Topik utama yang dibahas
-            4. Konteks dan implikasi penting
-            5. Rekomendasi atau tindak lanjut (jika relevan)
+        1. Ringkasan utama 
+        2. Poin-poin penting 
+        3. Topik utama yang dibahas
+        4. Konteks dan implikasi penting
+        5. Rekomendasi atau tindak lanjut (jika relevan)
 - Light/dark mode toggle
 
+
+## Demo
+
+https://mileappvn.streamlit.app/
+
+
+## Authors
+
+- [@ferritopia](https://www.github.com/ferritopia) - idea 🧠
+- [@claude.ai](https://claude.ai/) - code 🤖
 
 ## Reference
 
@@ -57,16 +67,6 @@ Didukung oleh 🦙Llama dan 🦻Whisper
  - [Awesome README](https://github.com/matiassingers/awesome-readme)
  - 代码 100% 由 [Claude](https://claude.ai/) 创建 😉
 
-
-
-## Authors
-
-- [@ferritopia](https://www.github.com/ferritopia) - ide 🧠
-- [@claude.ai](https://claude.ai/) - code 🤖
-
-## Demo
-
-https://mileappvn.streamlit.app/
 
 
 ## Appendix
