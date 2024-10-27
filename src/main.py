@@ -8,7 +8,7 @@ import json
 
 # Konfigurasi page
 st.set_page_config(
-    page_title="MileApp Voicenote Analyzer",
+    page_title="MileApp Voicenote Summarizer",
     page_icon="🎙️",
     layout="wide"
 )
