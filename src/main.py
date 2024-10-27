@@ -142,20 +142,20 @@ def analyze_text(text):
         raise Exception(f"Gagal menganalisis teks: {str(e)}")
 
 # Title
-st.title("🎙️ MileApp Voicenote Analysis")
+st.title("🎙️ MileApp Voice Note Summarizer")
 st.write("Masukkan Task ID dan Token untuk menganalisis audio dari MileApp")
 
 # Input fields
 task_id = st.text_input("📦 Task ID", help="Masukkan Task ID dari MileApp")
 token = st.text_input("🔑 Token", type="password", help="Masukkan token autentikasi MileApp")
 
-if st.button("Analisis Audio", disabled=not (task_id and token)):
+if st.button("Analisis Voice Note", disabled=not (task_id and token)):
     if not task_id or not token:
         st.error("Mohon masukkan Task ID dan Token")
     else:
         try:
             # Create tabs
-            tab1, tab2 = st.tabs(["📊 Hasil Analisis", "📝 Hasil Transkripsi"])
+            tab1, tab2 = st.tabs(["📊 Ringkasan", "📝 Transkripsi"])
             
             # Get audio URL
             with st.spinner('Mengambil data dari MileApp...'):
@@ -179,7 +179,7 @@ if st.button("Analisis Audio", disabled=not (task_id and token)):
                 st.write(analysis)
             
             with tab2:
-                st.markdown("### 📝 Transkripsi")
+                st.markdown("### 📝 Teks Audio")
                 st.write(transcription)
             
             # Success message
