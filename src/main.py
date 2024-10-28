@@ -110,11 +110,11 @@ def analyze_text(text):
     messages = [
         {
             "role": "system",
-            "content": "Anda adalah asisten yang ahli dalam menganalisis teks. Berikan analisis yang mencakup: Ringkasan utama, Poin-poin penting, Topik utama yang dibahas, Konteks dan implikasi penting, Rekomendasi atau tindak lanjut (jika relevan)"
+            "content": "Anda adalah asisten yang ahli dalam menganalisis voice note. Berikan analisis yang mencakup hal berikut jika perlu disampaikan: Ringkasan utama, Poin-poin penting, Topik utama yang dibahas, Konteks dan implikasi penting, Rekomendasi atau tindak lanjut (jika relevan)"
         },
         {
             "role": "user",
-            "content": f"Analisis teks berikut ini: {text}"
+            "content": f"Analisis voice note berikut ini: {text}"
         }
     ]
     
