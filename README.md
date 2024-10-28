@@ -34,9 +34,11 @@ https://mileappvn.streamlit.app/
 
 ### Deploy locally
 1. Buat .env file, dan tambah Groq API key ke dalamnya
-`GROQ_API_KEY='YOUR_GROQ_API_KEY'`
+```
+GROQ_API_KEY='YOUR_GROQ_API_KEY'
+```
 
-2. To deploy this project locally run
+3. To deploy this project locally run
 
 ```bash
   pip install -r requirements.txt
