@@ -1,6 +1,6 @@
 
-# 🎙️ MileApp VoiceNote Summarizer 
-Analisa AI untuk voicenote MileApp, sebuah AI mini project 🤖 
+# 🎙️ MileApp Voice Note Summarizer 
+Analisa dari voicenote MileApp, sebuah AI mini project 🤖 
 
 Didukung oleh 🦙Llama dan 🦻Whisper
 
@@ -14,7 +14,7 @@ Didukung oleh 🦙Llama dan 🦻Whisper
 ## Features
 
 - Auto detect voicenote (m4a) file in task data
-- Auto analyze transcription
+- Auto analyze transcription into 
 - Analisa mencakup:
 
         1. Ringkasan utama 
@@ -30,11 +30,20 @@ Didukung oleh 🦙Llama dan 🦻Whisper
 https://mileappvn.streamlit.app/
 
 
-## Authors
+## Deployment
 
-- [@ferritopia](https://www.github.com/ferritopia) - idea 🧠
-- [@claude.ai](https://claude.ai/) - code 🤖
+### Deploy locally
+1. Masukkan Groq API key di file .env
+2. To deploy this project locally run
 
+```bash
+  pip install -r requirements.txt
+  streamlit run main.py  
+```
+
+### Deploy to Streamlit 
+Copy Griq API di Streamlit. Klik additional settings paste isi dari file .env (this is the st.secrets):
+![App Screenshot](https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Foeqstxp26670fhsra8nd.png)
 ## Reference
 
 #### Tools yang digunakan
@@ -68,6 +77,11 @@ https://mileappvn.streamlit.app/
  - 代码 100% 由 [Claude](https://claude.ai/) 创建 😉
 
 
+
+## Authors
+
+- [@ferritopia](https://www.github.com/ferritopia) - idea 🧠
+- [@claude.ai](https://claude.ai/) - code 🤖
 
 ## Appendix
 
