@@ -42,7 +42,7 @@ https://mileappvn.streamlit.app/
 ```
 
 ### Deploy to Streamlit 
-Copy Griq API di Streamlit. Klik additional settings paste isi dari file .env (this is the st.secrets):
+Copy Groq API ke Streamlit. Klik additional settings paste isi dari file .env (this is the st.secrets):
 ![App Screenshot](https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Foeqstxp26670fhsra8nd.png)
 ## Reference
 
