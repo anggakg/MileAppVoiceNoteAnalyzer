@@ -33,7 +33,9 @@ https://mileappvn.streamlit.app/
 ## Deployment
 
 ### Deploy locally
-1. Masukkan Groq API key di file .env
+1. Buat .env file, dan tambah Groq API key ke dalamnya
+`GROQ_API_KEY='YOUR_GROQ_API_KEY'`
+
 2. To deploy this project locally run
 
 ```bash
@@ -42,7 +44,7 @@ https://mileappvn.streamlit.app/
 ```
 
 ### Deploy to Streamlit 
-Copy Groq API ke Streamlit. Klik additional settings paste isi dari file .env (this is the st.secrets):
+Copy Griq API di Streamlit. Klik additional settings paste isi dari file .env (this is the st.secrets):
 ![App Screenshot](https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Foeqstxp26670fhsra8nd.png)
 ## Reference
 
@@ -98,5 +100,10 @@ Copy Groq API ke Streamlit. Klik additional settings paste isi dari file .env (t
 | Model | Requests per Minute | Requests per Day | Tokens per Minute | Tokens per Day |
 | :-------- | :------- | :---------- | :---------- | :---------- |
 | llama-3.2-1b-preview | 30 | 7000 | 7000 | 500.000 | 
+
+
+
+## Environment Variables
+
 
 
