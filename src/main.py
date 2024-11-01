@@ -190,4 +190,4 @@ if st.button("Analisis Voice Note", disabled=not (task_id and token)):
 
 # Footer
 st.markdown("---")
-st.caption("A presentation form Mustibisha Group")
+st.caption("A presentation from Mustibisha Group")
