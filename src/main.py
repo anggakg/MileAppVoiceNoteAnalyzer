@@ -178,7 +178,7 @@ if st.button("Analisis Voice Note", disabled=not (task_id and token)):
                 st.markdown("### 📊 Analisis")
                 analysis_text = st.code(analysis, language="markdown")
                 # if st.button("Salin Analisis", key="copy_analysis"):
-                    st.markdown("Teks analisis berhasil disalin ke clipboard")
+                st.markdown("Teks analisis berhasil disalin ke clipboard")
             
             with tab2:
                 st.markdown("### 📝 Teks Audio")
