@@ -97,15 +97,19 @@ def transcribe_audio(audio_path):
                 response_format="verbose_json"
             )
         os.unlink(audio_path)  # Hapus temporary file
-        return transcription.json
+        # Periksa apakah transcription memiliki data
+        if transcription and "segments" in transcription:
+            return transcription
+        else:
+            raise ValueError("Tidak ada suara dalam Voice Note")
     except Exception as e:
         os.unlink(audio_path)  # Pastikan temporary file terhapus meski error
         raise e
 
 def analyze_text(text):
     """Analisis teks menggunakan Groq Llama"""
-    if not text or not isinstance(text, str):
-        raise ValueError("Input teks tidak valid atau kosong")
+    if not transcription or "segments" not in transcription:
+        raise ValueError("Input transkripsi tidak valid atau kosong")
         
     messages = [
         {
