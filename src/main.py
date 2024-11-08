@@ -97,7 +97,7 @@ def transcribe_audio(audio_path):
                 response_format="verbose_json"
             )
         os.unlink(audio_path)  # Hapus temporary file
-        return transcription.text
+        return transcription.json
     except Exception as e:
         os.unlink(audio_path)  # Pastikan temporary file terhapus meski error
         raise e
@@ -176,7 +176,7 @@ if st.button("Analisis Voice Note", disabled=not (task_id and token)):
             # Display results in tabs
             with tab1:
                 st.markdown("### 📊 Analisis")
-                analysis_text = st.text_area("Teks Analisis", analysis, height=300, key="analysis_text")
+                analysis_text = st.text_area("Teks Analisis", analysis, height=300, key="analysis_text", disabled=True)
                 if st.button("Salin Analisis", key="copy_analysis"):
                     st.write("Teks analisis berhasil disalin ke clipboard")
                     st.clipboard(analysis_text)
@@ -184,12 +184,12 @@ if st.button("Analisis Voice Note", disabled=not (task_id and token)):
             with tab2:
                 st.markdown("### 📝 Teks Audio")
                 transcript = ""
-                for segment in transcription.segments:
-                    start_time = segment.start
-                    end_time = segment.end
-                    text = segment.text
+                for segment in transcription["segments"]:
+                    start_time = segment["start"]
+                    end_time = segment["end"]
+                    text = segment["text"]
                     transcript += f"[{start_time:.2f}-{end_time:.2f}] {text}\n"
-                transcript_text = st.text_area("Teks Transkripsi", transcript, height=300, key="transcript_text")
+                transcript_text = st.text_area("Teks Transkripsi", transcript, height=300, key="transcript_text", disabled=True)
                 if st.button("Salin Transkripsi", key="copy_transcript"):
                     st.write("Teks transkripsi berhasil disalin ke clipboard")
                     st.clipboard(transcript_text)
