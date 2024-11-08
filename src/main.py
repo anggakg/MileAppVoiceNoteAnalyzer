@@ -5,6 +5,7 @@ from groq import Groq
 import tempfile
 import requests
 import json
+from streamlit_extras.stateful_button import button
 
 # Konfigurasi page
 st.set_page_config(
@@ -176,11 +177,23 @@ if st.button("Analisis Voice Note", disabled=not (task_id and token)):
             # Display results in tabs
             with tab1:
                 st.markdown("### 📊 Analisis")
-                st.write(analysis)
+                analysis_text = st.text_area("Teks Analisis", analysis, height=300, key="analysis_text")
+                if st.button("Salin Analisis", key="copy_analysis"):
+                    st.write("Teks analisis berhasil disalin ke clipboard")
+                    st.clipboard(analysis_text)
             
             with tab2:
                 st.markdown("### 📝 Teks Audio")
-                st.write(transcription)
+                transcript = ""
+                for segment in transcription.segments:
+                    start_time = segment.start
+                    end_time = segment.end
+                    text = segment.text
+                    transcript += f"[{start_time:.2f}-{end_time:.2f}] {text}\n"
+                transcript_text = st.text_area("Teks Transkripsi", transcript, height=300, key="transcript_text")
+                if st.button("Salin Transkripsi", key="copy_transcript"):
+                    st.write("Teks transkripsi berhasil disalin ke clipboard")
+                    st.clipboard(transcript_text)
             
             # Success message
             st.success('Proses selesai!')
