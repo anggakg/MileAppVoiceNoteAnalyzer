@@ -103,8 +103,14 @@ def transcribe_audio(audio_path):
         else:
             raise ValueError("Tidak ada suara dalam Voice Note")
     except Exception as e:
-        os.unlink(audio_path)  # Pastikan temporary file terhapus meski error
+        # Hapus file temporary jika ada
+        if os.path.exists(audio_path):
+            os.unlink(audio_path)
         raise e
+    finally:
+        # Pastikan file temporary selalu dihapus
+        if os.path.exists(audio_path):
+            os.unlink(audio_path)
 
 def analyze_text(text):
     """Analisis teks menggunakan Groq Llama"""
