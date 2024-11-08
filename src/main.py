@@ -5,7 +5,6 @@ from groq import Groq
 import tempfile
 import requests
 import json
-from streamlit_extras.stateful_button import button
 
 # Konfigurasi page
 st.set_page_config(
