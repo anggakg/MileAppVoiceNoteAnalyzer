@@ -97,25 +97,15 @@ def transcribe_audio(audio_path):
                 response_format="verbose_json"
             )
         os.unlink(audio_path)  # Hapus temporary file
-        # Periksa apakah transcription memiliki data
-        if transcription and "segments" in transcription:
-            return transcription
-        else:
-            raise ValueError("Tidak ada suara dalam Voice Note")
+        return transcription.text
     except Exception as e:
-        # Hapus file temporary jika ada
-        if os.path.exists(audio_path):
-            os.unlink(audio_path)
+        os.unlink(audio_path)  # Pastikan temporary file terhapus meski error
         raise e
-    finally:
-        # Pastikan file temporary selalu dihapus
-        if os.path.exists(audio_path):
-            os.unlink(audio_path)
 
 def analyze_text(text):
     """Analisis teks menggunakan Groq Llama"""
-    if not transcription or "segments" not in transcription:
-        raise ValueError("Input transkripsi tidak valid atau kosong")
+    if not text or not isinstance(text, str):
+        raise ValueError("Input teks tidak valid atau kosong")
         
     messages = [
         {
@@ -193,13 +183,7 @@ if st.button("Analisis Voice Note", disabled=not (task_id and token)):
             
             with tab2:
                 st.markdown("### 📝 Teks Audio")
-                transcript = ""
-                for segment in transcription["segments"]:
-                    start_time = segment["start"]
-                    end_time = segment["end"]
-                    text = segment["text"]
-                    transcript += f"[{start_time:.2f}-{end_time:.2f}] {text}\n"
-                transcript_text = st.text_area("Teks Transkripsi", transcript, height=300, key="transcript_text", disabled=True)
+                transcript_text = st.text_area("Teks Transkripsi", transcription, height=300, key="transcript_text", disabled=True)
                 if st.button("Salin Transkripsi", key="copy_transcript"):
                     st.write("Teks transkripsi berhasil disalin ke clipboard")
                     st.clipboard(transcript_text)
