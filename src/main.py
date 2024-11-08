@@ -5,7 +5,6 @@ from groq import Groq
 import tempfile
 import requests
 import json
-import pyperclip
 
 # Konfigurasi page
 st.set_page_config(
