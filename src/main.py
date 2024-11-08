@@ -5,6 +5,7 @@ from groq import Groq
 import tempfile
 import requests
 import json
+import pyperclip
 
 # Konfigurasi page
 st.set_page_config(
@@ -178,8 +179,8 @@ if st.button("Analisis Voice Note", disabled=not (task_id and token)):
                 st.markdown("### 📊 Analisis")
                 analysis_text = st.text_area("Teks Analisis", analysis, height=300, key="analysis_text", disabled=True)
                 if st.button("Salin Analisis", key="copy_analysis"):
-                    st.write("Teks analisis berhasil disalin ke clipboard")
-                    st.clipboard(analysis_text)
+                    pyperclip.copy(analysis_text)
+                    st.success("Teks analisis berhasil disalin ke clipboard")
             
             with tab2:
                 st.markdown("### 📝 Teks Audio")
