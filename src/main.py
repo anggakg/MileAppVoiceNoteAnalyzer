@@ -1,37 +1,34 @@
 import os
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 import streamlit as st
 from groq import Groq
 import tempfile
 import requests
 import json
-import pyperclip
 
-# Configure Streamlit page
+# Konfigurasi page
 st.set_page_config(
     page_title="MileApp Voicenote Summarizer",
     page_icon="🎙️",
     layout="wide"
 )
 
-# Load environment variables
-load_dotenv()
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-
-if not GROQ_API_KEY:
-    st.error("GROQ_API_KEY is not set. Please ensure it's available in the `.env` file or environment variables.")
-    st.stop()
-
-# Initialize Groq client
+# Handling environment variables
 try:
-    client = Groq(api_key=GROQ_API_KEY)
-except Exception as e:
-    st.error(f"Failed to initialize Groq client: {str(e)}")
-    st.stop()
+    secrets = dotenv_values(".env")
+    GROQ_API_KEY = secrets["GROQ_API_KEY"]
+except:
+    secrets = st.secrets
+    GROQ_API_KEY = secrets["GROQ_API_KEY"]
 
-# Utility functions
+# Save API key to environment variable
+os.environ["GROQ_API_KEY"] = GROQ_API_KEY
+
+# Inisialisasi Groq client
+client = Groq()
+
 def find_m4a_urls(obj):
-    """Recursively search for .m4a URLs in any field of the JSON response."""
+    """Recursively search for .m4a URLs in any field of the JSON response"""
     urls = []
 
     def recursive_search(item):
@@ -48,7 +45,7 @@ def find_m4a_urls(obj):
     return urls
 
 def get_audio_url(task_id, token):
-    """Retrieve audio URL from MileApp API."""
+    """Mengambil URL audio dari MileApp API"""
     headers = {
         'Authorization': f'Bearer {token}',
         'Content-Type': 'application/json'
@@ -58,32 +55,39 @@ def get_audio_url(task_id, token):
 
     try:
         response = requests.get(url, headers=headers)
-        response.raise_for_status()
+        response.raise_for_status()  # Raise exception for non-200 status codes
+
         data = response.json()
 
-        # Search for .m4a URLs
+        # Recursively search for all .m4a URLs in the response
         audio_urls = find_m4a_urls(data)
+
         if not audio_urls:
-            raise ValueError("No .m4a audio file found in this task.")
-        return audio_urls[0]
+            raise ValueError("Tidak ditemukan file audio (.m4a) dalam task ini")
+
+        return audio_urls[0]  # Return the first found audio URL
+
     except requests.exceptions.RequestException as e:
-        raise Exception(f"Failed to fetch data from MileApp API: {str(e)}")
+        raise Exception(f"Gagal mengambil data dari MileApp API: {str(e)}")
     except (KeyError, ValueError) as e:
-        raise Exception(f"Error processing API response: {str(e)}")
+        raise Exception(f"Error dalam memproses response API: {str(e)}")
 
 def download_audio(url):
-    """Download audio file from URL."""
+    """Download audio dari URL"""
     try:
         response = requests.get(url)
         response.raise_for_status()
+
+        # Membuat temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix='.m4a') as tmp_file:
             tmp_file.write(response.content)
             return tmp_file.name
+
     except requests.exceptions.RequestException as e:
-        raise Exception(f"Failed to download audio file: {str(e)}")
+        raise Exception(f"Gagal mengunduh file audio: {str(e)}")
 
 def transcribe_audio(audio_path):
-    """Transcribe audio using Groq Whisper."""
+    """Transkripsi audio menggunakan Groq Whisper"""
     try:
         with open(audio_path, "rb") as file:
             transcription = client.audio.transcriptions.create(
@@ -92,32 +96,32 @@ def transcribe_audio(audio_path):
                 language="id",
                 response_format="verbose_json"
             )
-        os.unlink(audio_path)  # Remove temporary file
+        os.unlink(audio_path)  # Hapus temporary file
         return transcription.text
     except Exception as e:
-        os.unlink(audio_path)  # Ensure file is deleted on error
-        raise Exception(f"Failed to transcribe audio: {str(e)}")
+        os.unlink(audio_path)  # Pastikan temporary file terhapus meski error
+        raise e
 
 def analyze_text(text):
-    """Analyze text using Groq Llama."""
+    """Analisis teks menggunakan Groq Llama"""
     if not text or not isinstance(text, str):
-        raise ValueError("Invalid or empty input text.")
+        raise ValueError("Input teks tidak valid atau kosong")
 
     messages = [
         {
             "role": "system",
-            "content": "You are an expert assistant analyzing voice notes. Provide insights such as key summaries, main points, and actionable recommendations if relevant."
+            "content": "Anda adalah asisten yang ahli dalam menganalisis voice note. Berikan analisis yang mencakup hal berikut jika perlu disampaikan: Ringkasan utama, Poin-poin penting, Topik utama yang dibahas, Konteks dan implikasi penting, Rekomendasi atau tindak lanjut (jika relevan)"
         },
         {
             "role": "user",
-            "content": f"Analyze the following voice note: {text}"
+            "content": f"Analisis voice note berikut ini: {text}"
         }
     ]
 
     analysis = ""
     try:
         stream = client.chat.completions.create(
-            model="llama-3.2-90b-text-preview",
+            model="llama-3.2-90b-vision-preview",
             messages=messages,
             temperature=0.7,
             max_tokens=1024,
@@ -130,58 +134,64 @@ def analyze_text(text):
                 analysis += chunk.choices[0].delta.content
 
         if not analysis.strip():
-            raise ValueError("Analysis resulted in empty text.")
-        return analysis
-    except Exception as e:
-        raise Exception(f"Failed to analyze text: {str(e)}")
+            raise ValueError("Analisis menghasilkan teks kosong")
 
-# Main Streamlit UI
+        return analysis
+
+    except Exception as e:
+        raise Exception(f"Gagal menganalisis teks: {str(e)}")
+
+# Title
 st.title("🎙️ MileApp Voice Note Summarizer")
-st.write("Enter Task ID and Token to analyze audio from MileApp.")
+st.write("Masukkan Task ID dan Token untuk menganalisis audio dari MileApp")
 
 # Input fields
-task_id = st.text_input("📦 Task ID", help="Enter the Task ID from MileApp")
-token = st.text_input("🔑 Token", type="password", help="Enter the MileApp authentication token")
+task_id = st.text_input("📦 Task ID", help="Masukkan Task ID dari MileApp")
+token = st.text_input("🔑 Token", type="password", help="Masukkan token autentikasi MileApp")
 
-if st.button("Analyze Voice Note"):
+if st.button("Analisis Voice Note", disabled=not (task_id and token)):
     if not task_id or not token:
-        st.error("Please provide both Task ID and Token.")
+        st.error("Mohon masukkan Task ID dan Token")
     else:
         try:
             # Create tabs
-            tab1, tab2 = st.tabs(["📊 Summary", "📝 Transcription"])
+            tab1, tab2 = st.tabs(["📊 Ringkasan", "📝 Transkripsi"])
 
-            with st.spinner('Fetching data from MileApp...'):
+            # Get audio URL
+            with st.spinner('Mengambil data dari MileApp...'):
                 audio_url = get_audio_url(task_id, token)
 
-            with st.spinner('Downloading audio file...'):
+            # Download audio
+            with st.spinner('Mengunduh file audio...'):
                 audio_path = download_audio(audio_url)
 
-            with st.spinner('Processing audio transcription...'):
+            # Transcribe audio
+            with st.spinner('Memproses transkripsi audio...'):
                 transcription = transcribe_audio(audio_path)
 
-            with st.spinner('Analyzing transcription...'):
+            # Analyze transcription
+            with st.spinner('Menganalisis transkripsi...'):
                 analysis = analyze_text(transcription)
 
             # Display results in tabs
             with tab1:
-                st.markdown("### 📊 Analysis")
-                st.code(analysis, language="markdown")
-                if st.button("Copy Analysis", key="copy_analysis"):
-                    pyperclip.copy(analysis)
-                    st.success("Analysis text copied to clipboard.")
+                st.markdown("### 📊 Analisis")
+                analysis_text = st.code(analysis, language="markdown")
+                # if st.button("Salin Analisis", key="copy_analysis"):
+                st.markdown("Teks analisis berhasil disalin ke clipboard")
 
             with tab2:
-                st.markdown("### 📝 Transcription")
-                st.text_area("Transcribed Text", transcription, height=300, key="transcript_text", disabled=True)
-                if st.button("Copy Transcription", key="copy_transcription"):
-                    pyperclip.copy(transcription)
-                    st.success("Transcription text copied to clipboard.")
+                st.markdown("### 📝 Teks Audio")
+                transcript_text = st.text_area("Teks Transkripsi", transcription, height=300, key="transcript_text", disabled=True)
+                if st.button("Salin Transkripsi", key="copy_transcript"):
+                    st.write("Teks transkripsi berhasil disalin ke clipboard")
+                    st.clipboard(transcript_text)
 
-            st.success('Process completed!')
+            # Success message
+            st.success('Proses selesai!')
 
         except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
+            st.error(f"Terjadi kesalahan: {str(e)}")
 
 # Footer
 st.markdown("---")
