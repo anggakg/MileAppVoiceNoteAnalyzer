@@ -121,7 +121,7 @@ def analyze_text(text):
     analysis = ""
     try:
         stream = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.2-3b-preview",
             messages=messages,
             temperature=0.7,
             max_tokens=1024,
